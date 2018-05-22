@@ -29,10 +29,12 @@ namespace EntityFramework.Extentions.SoftDelete.Poc.CQS.Handlers
                 throw new Exception("No such person.");
             }
             //person.IsDeleted = command.IsDelete;
-            var changes = Context.ChangeTracker.Entries();
+            //var changes = Context.ChangeTracker.Entries();
+
             Context.Persons.Delete(person);
+
             //Context.Persons.SoftDelete(person);
-            changes = Context.ChangeTracker.Entries();
+            //changes = Context.ChangeTracker.Entries();
             await Context.SaveChangesAsync();
         }
 

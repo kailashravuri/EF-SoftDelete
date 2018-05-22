@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Reflection;
 
 namespace EntityFramework.Ententions.SoftDelte
 {
@@ -6,28 +7,12 @@ namespace EntityFramework.Ententions.SoftDelte
     {
         public static void Delete<TEntity>(this DbSet<TEntity> set, TEntity entity) where TEntity : class
         {
-            var isDeltedField = entity.GetType().GetProperty("IsDeleted");
-            isDeltedField?.SetValue(entity, true);
+            PropertyInfo isDeltedField = entity.GetType().GetProperty("IsDeleted");
 
-            //            var field = entity.GetType().GetField("_entityWrapper");
-            //            var wrapper = field.GetValue(entity);
-            //            var property = wrapper.GetType().GetProperty("Context");
-            //            var context = (ObjectContext)property.GetValue(wrapper, null);
+            if (isDeltedField != null)
+                isDeltedField.SetValue(entity, true);
+            else
+                set.Remove(entity);
         }
     }
-
-//    public class DbSetExtentions<TEntity> : DbSet<TEntity> where TEntity : class
-//    {
-//        public override TEntity Remove(TEntity entity)
-//        {
-//            var isDeltedField = entity.GetType().GetProperty("IsDeleted");
-//            if (isDeltedField == null)
-//            {
-//                return base.Remove(entity);
-//            }
-//
-//            isDeltedField.SetValue(entity, true);
-//            return entity;
-//        }
-//    }
 }
